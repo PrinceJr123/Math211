@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQZA Marketplace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f5;
+        }
+
+        /* Header and Search Bar */
+        .header {
+            background-color: #232f3e;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            flex-grow: 1;
+        }
+
+        .sell-button {
+            background-color: #ff9900;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #232f3e;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin: 15px auto;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-container input {
+            padding: 8px;
+            width: 80%;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Grid Layout for Product Listing */
+        .marketplace-container {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        .item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .item img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item h2 {
+            font-size: 14px;
+            margin: 8px 0;
+            color: #333;
+        }
+
+        .item .price {
+            font-size: 16px;
+            color: #b12704;
+            margin-bottom: 8px;
+        }
+
+        .view-details {
+            background-color: #007185;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .view-details:hover {
+            background-color: #005f67;
+        }
+
+        /* Product Details Page */
+        .product-details {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none; /* Initially hidden */
+        }
+
+        .product-details img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        /* Thumbnail Container */
+        .thumbnail-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .thumbnail-container img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            transition: border 0.3s ease;
+        }
+
+        .thumbnail-container img:hover, .thumbnail-container img.active {
+            border: 2px solid #007185;
+        }
+
+        .product-details h2 {
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .product-details p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .product-details .price {
+            font-size: 18px;
+            color: #b12704;
+            margin-bottom: 10px;
+        }
+
+        .order-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            display: inline-block;
+            font-size: 14px;
+            color: #007185;
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .marketplace-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .search-container input {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Sticky Sell Button -->
+    <div class="header">
+        <h1>IQZA Marketplace</h1>
+        <button class="sell-button" onclick="window.location.href=' https://www.socialcreator.com/luxmart/?s=287584'">Sell</button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for items..." onkeyup="filterItems()">
+    </div>
+
+    <!-- Marketplace Items Container -->
+    <div class="marketplace-container" id="marketplace"></div>
+
+    <!-- Product Details Page -->
+    <div class="product-details" id="productDetails">
+        <img id="productMainImage" alt="Product Image">
+        <!-- Thumbnail Images Container -->
+        <div class="thumbnail-container" id="thumbnailContainer"></div>
+        <h2 id="productTitle"></h2>
+        <p id="productDescription"></p>
+        <p id="productSize"></p>
+        <p id="productColor"></p>
+        <p class="price" id="productPrice"></p>
+        <p id="deliveryMethod">Delivery Method: On-campus Delivery (<span id="campusName"></span>)</p>
+        <p id="paymentMethod">Payment: Cash on Delivery</p>
+        <button class="order-button" id="productOrderButton">Place Order</button>
+        <a href="#" class="back-button" onclick="goBack()">Back to Marketplace</a>
+    </div>
+
+    <script>
+        // Campus mappings
+        const campusMapping = {
+            "Campus A": "University of Buea (UB)",
+            "Campus B": "University of Douala (UD)",
+            "Campus C": "University of Yaoundé I (UYI)"
+        };
+
+        const items = [
+            {
+                title: "Salted Plantain Chips",
+                description: "Crunchy and delicious, salted plantain chips are made from ripe plantains sliced thin and fried to golden perfection. Lightly salted, they offer a savory snack with a satisfying crunch.",
+                images: [
+                    { url: "https://iili.io/2FKW8Al.jpg", price: "100 XAF" },
+                    { url: "https://iili.io/2Fqg9qJ.jpg/300x200.png?text=Plantain+Chips+2", price: "100 XAF" },
+                    
+                ],
+                size: "Small Pack",
+                color: "N/A",
+                location: "Campus A",
+                whatsappLink: "https://wa.me/p/7944720705629331/237652170978",
+                timestamp: new Date().getTime()
+            },
+            {
+                title: "Sweet Crunchy Groundnut Treats",
+                description: "Enjoy our delicious groundnut sweets, made from roasted groundnuts and coated in a sweet syrup. Perfect for a quick snack or a tasty treat!",
+                images: [
+                    { url: "https://iili.io/2FKWOcG.jpg", price: "100 XAF" },
+                    { url: "https://iili.io/2FqQcUg.jpg/300x200.png?text=Groundnut+Sweet+2", price: "1500 XAF" }
+                ],
+                size: "Medium Pack",
+                color: "N/A",
+                location: "Campus A",
+                whatsappLink: "https://wa.me/p/28090911343841687/237652170978",
+                timestamp: new Date().getTime() - 1000
+            },
+            {
+                title: "Smart Watch",
+                description: "Stay connected with this sleek and modern smartwatch.",
+                images: [
+                    { url: "https://via.placeholder.com/300x200.png?text=Smart+Watch", price: "5000 XAF" },
+                    { url: "https://via.placeholder.com/300x200.png?text=Smart+Watch+2", price: "5500 XAF" },
+                    { url: "https://via.placeholder.com/300x200.png?text=Smart+Watch+3", price: "6000 XAF" }
+                ],
+                size: "One Size",
+                color: "Black",
+                location: "Campus C",
+                whatsappLink: "https://wa.me/1234567890",
+                timestamp: new Date().getTime() - 2000
+            }
+        ];
+
+        // Function to display items sorted by newest first
+        function displayItems() {
+            const marketplaceContainer = document.getElementById('marketplace');
+            marketplaceContainer.innerHTML = ''; // Clear the marketplace
+
+            const sortedItems = items.sort((a, b) => b.timestamp - a.timestamp);
+
+            sortedItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('item');
+                itemElement.innerHTML = `
+                    <img src="${item.images[0].url}" alt="${item.title}" loading="eager">
+                    <h2>${item.title}</h2>
+                    <p class="price">${item.images[0].price}</p>
+                    <a href="#" class="view-details" onclick="showDetails('${item.title}')">Buy</a>
+                `;
+                marketplaceContainer.appendChild(itemElement);
+            });
+        }
+
+        // Function to show product details
+        function showDetails(title) {
+            const selectedItem = items.find(item => item.title === title);
+
+            document.getElementById('productTitle').innerText = selectedItem.title;
+            document.getElementById('productDescription').innerText = selectedItem.description;
+            document.getElementById('productPrice').innerText = selectedItem.images[0].price;
+            document.getElementById('productMainImage').src = selectedItem.images[0].url;
+
+            // Update campus name
+            document.getElementById('campusName').innerText = campusMapping[selectedItem.location];
+
+            // Adding size and color details if available
+            document.getElementById('productSize').innerText = selectedItem.size ? `Size: ${selectedItem.size}` : '';
+            document.getElementById('productColor').innerText = selectedItem.color ? `Color: ${selectedItem.color}` : '';
+
+            document.getElementById('productOrderButton').onclick = function() {
+                window.open(selectedItem.whatsappLink, '_blank');
+            };
+
+            // Populate thumbnail images
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            thumbnailContainer.innerHTML = ''; // Clear existing thumbnails
+            selectedItem.images.forEach((image, index) => {
+                const thumbnail = document.createElement('img');
+                thumbnail.src = image.url;
+                thumbnail.alt = `${selectedItem.title} thumbnail ${index + 1}`;
+                if (index === 0) thumbnail.classList.add('active'); // First image is active by default
+                thumbnail.onclick = function() {
+                    changeMainImage(image.url, image.price);
+                    document.querySelectorAll('.thumbnail-container img').forEach(img => img.classList.remove('active'));
+                    thumbnail.classList.add('active');
+                };
+                thumbnailContainer.appendChild(thumbnail);
+            });
+
+            // Hide the marketplace and show the product details
+            document.getElementById('marketplace').style.display = 'none';
+            document.getElementById('productDetails').style.display = 'block';
+        }
+
+        // Function to change the main image and price when a thumbnail is clicked
+        function changeMainImage(imageUrl, price) {
+            document.getElementById('productMainImage').src = imageUrl;
+            document.getElementById('productPrice').innerText = price;
+        }
+
+        // Function to go back to the marketplace
+        function goBack() {
+            document.getElementById('productDetails').style.display = 'none';
+            document.getElementById('marketplace').style.display = 'grid';
+        }
+
+        // Function to filter items based on the search input
+        function filterItems() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const marketplaceContainer = document.getElementById('marketplace');
+
+            marketplaceContainer.innerHTML = ''; // Clear the marketplace
+
+            const filteredItems = items.filter(item => 
+                item.title.toLowerCase().includes(input) || 
+                item.description.toLowerCase().includes(input)
+            );
+
+            filteredItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('item');
+                itemElement.innerHTML = `
+                    <img src="${item.images[0].url}" alt="${item.title}" loading="eager">
+                    <h2>${item.title}</h2>
+                    <p class="price">${item.images[0].price}</p>
+                    <a href="#" class="view-details" onclick="showDetails('${item.title}')">Buy</a>
+                `;
+                marketplaceContainer.appendChild(itemElement);
+            });
+        }
+
+        // Display items on initial load
+        window.onload = displayItems;
+    </script>
+</body>
+</html>
